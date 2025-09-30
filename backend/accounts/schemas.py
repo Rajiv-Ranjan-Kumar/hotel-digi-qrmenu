@@ -1,14 +1,4 @@
-from ninja import ModelSchema, Schema
-from pydantic import model_validator
-
-from validators.base import (
-    validate_email,
-    validate_model_id,
-    validate_password,
-    validate_passwords_match, 
-    validate_string
-)
-
+from utils.schema_config import *
 
 
 
@@ -30,6 +20,6 @@ class UserInSchema(Schema):
         validate_string(value=self.last_name, field_name="Last name", is_required=True)
         validate_password(value=self.password, field_name="Password", is_required=True)
         validate_passwords_match(password=self.password, confirm_password=self.confirm_password)
-        validate_model_id(value=self.role_id, model_name="Role", field_name="Role ID", is_required=True)
-
+        validate_number(value=self.role_id, field_name="Role ID", is_required=True)
+        
         return self

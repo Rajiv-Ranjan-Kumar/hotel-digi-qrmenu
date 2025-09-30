@@ -18,8 +18,8 @@ db.sqlite3
 media/
 
 # Static and build files
-staticfiles/
 static/
+staticfiles/
 build/
 dist/
 
@@ -36,3 +36,8 @@ Thumbs.db
 # Environment variables
 *.env
 *.local
+
+# Docker
+*.pid
+docker-compose.override.yml
+backend_postgres_data/

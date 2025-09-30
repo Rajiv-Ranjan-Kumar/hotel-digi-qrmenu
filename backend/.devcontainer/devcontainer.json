@@ -1,0 +1,14 @@
+{
+  "name": "Django + Redis Dev Container",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "web",
+  "workspaceFolder": "/app",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "shutdownAction": "stopCompose",
+  "forwardPorts": [8000, 6379],
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt"
+}
