@@ -2,12 +2,13 @@ import re
 from ninja.errors import HttpError
 from django.apps import apps
 from asgiref.sync import sync_to_async
+from django.db.models import Model
+from typing import Type
 
 
 
 
-
-def validate_required(value, field_name="Field"):
+def validate_required(value: str, field_name: str="Field"):
     if value is None or (isinstance(value, str) and not value.strip()):
         raise HttpError(status_code=400, message=f"{field_name} is required.")
     
@@ -19,7 +20,7 @@ def validate_required(value, field_name="Field"):
 
 
 
-def validate_email(value, field_name="Email", is_required=False):
+def validate_email(value: str, field_name: str="Email", is_required: bool=False):
     if is_required:
         validate_required(value, field_name=field_name)
 
@@ -33,7 +34,7 @@ def validate_email(value, field_name="Email", is_required=False):
 
 
 
-def validate_string(value, field_name="Field", is_required=False):
+def validate_string(value: str, field_name: str="Field", is_required: bool=False):
     if is_required:
         validate_required(value, field_name=field_name)
     if value and not isinstance(value, str):
@@ -48,7 +49,27 @@ def validate_string(value, field_name="Field", is_required=False):
 
 
 
-def validate_password(value: str, field_name="Password", is_required=False):
+def validate_number(value: int, field_name: str = "Field", is_required: bool = False):
+    if is_required:
+        validate_required(value, field_name=field_name)
+    
+    if not isinstance(value, int):
+        raise HttpError(status_code=400, message=f"{field_name} must be a number integer")
+    
+    if value <= 0:
+        raise HttpError(status_code=400, message=f"{field_name} must be a positive number")
+    
+    return value
+
+
+
+
+
+
+
+
+
+def validate_password(value: str, field_name: str="Password", is_required: bool=False):
     if is_required:
         validate_required(value, field_name=field_name)
 
@@ -80,29 +101,23 @@ def validate_passwords_match(password, confirm_password):
 
 
 
-async def validate_model_id(value, model_name, field_name="ID", is_required=False):
-    if is_required and not value:
-        raise HttpError(status_code=400, message=f"{field_name} is required.")
+# def validate_model_id(model: Type[Model], value: int, field_name: str, is_required: bool = False) -> None:
+#     if is_required:
+#         validate_required(value, field_name=field_name)
 
-    if value is not None:
-        if not isinstance(value, int) or value <= 0:
-            raise HttpError(status_code=400, message=f"{field_name} must be a positive integer.")
+#     if not isinstance(value, int) or value <= 0:
+#         raise HttpError(status_code=400, message=f"{field_name} ID must be a positive integer.")
 
-        # Get model
-        Model = None
-        for app_config in apps.get_app_configs():
-            try:
-                Model = app_config.get_model(model_name)
-                break
-            except LookupError:
-                continue
+#     if not model.objects.filter(id=value).exists():
+#         raise HttpError(status_code=404, message=f"{field_name} with ID {value} not found")
+    
 
-        if Model is None:
-            raise HttpError(status_code=400, message=f"Model '{model_name}' does not exist.")
 
-        # Wrap sync ORM call inside sync_to_async
-        exists = await sync_to_async(Model.objects.filter(id=value).exists)()
-        if not exists:
-            raise HttpError(status_code=404, message=f"{field_name} with id {value} not found.")
 
-    return value
+
+
+
+async def validate_model_id(model: Type[Model], value: int, field_name: str):
+    exists = await model.objects.filter(id=value).aexists()
+    if not exists:
+        raise HttpError(status_code=404, message=f"{field_name} with ID {value} not found")

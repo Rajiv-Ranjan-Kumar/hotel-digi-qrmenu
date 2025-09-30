@@ -74,7 +74,7 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 
-
+# Redis Cache Configuration
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -86,11 +86,19 @@ CACHES = {
 }
 
 
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+# Cache alias shortcut
+CACHE_TTL = 60 * 100  # 10 minutes
+
+
+# Channels Configuration
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [config("REDIS_URL", "redis://redis:6379/0")],
+            "hosts": [config("REDIS_URL", "redis://redis:6379/1")],
         },
     },
 }
