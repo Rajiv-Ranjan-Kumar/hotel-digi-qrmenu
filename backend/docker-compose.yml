@@ -5,23 +5,18 @@ services:
     build: .
     env_file:
       - .env.development
-    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "
+      python manage.py makemigrations coresettings accounts &&
+      python manage.py migrate &&
+      python manage.py api_access &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - ./media:/app/media
     ports:
       - "8000:8000"
     depends_on:
-      - db
       - redis
-
-  db:
-    image: postgres:16
-    env_file:
-      - .env.development
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7
@@ -29,4 +24,4 @@ services:
       - "6379:6379"
 
 volumes:
-  postgres_data:
+  redis_data:

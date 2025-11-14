@@ -15,9 +15,14 @@ logger = logging.getLogger(__name__)
 
 
 
-
-
 DEFAULT_TTL = getattr(settings, "CACHE_TTL", 600)
+
+
+
+
+
+
+
 
 
 
@@ -45,12 +50,47 @@ def cache_data(key_prefix: str, ttl: int = DEFAULT_TTL):
 
 
 
-def invalidate_cache(pattern: str):
+
+
+
+
+
+
+# def invalidate_cache(pattern: str):
+#     """
+#     Clear cache keys matching a pattern.
+#     Example: invalidate_cache("users")
+#     """
+#     con = get_redis_connection("default")
+#     keys = con.keys(f"{pattern}:*")
+#     if keys:
+#         con.delete(*keys)
+
+
+
+
+
+
+
+
+
+def invalidate_cache(pattern: str = "*"):
     """
-    Clear cache keys matching a pattern.
-    Example: invalidate_cache("users")
+    Delete all cache keys matching the given pattern.
+    Works for any key, including those with django_redis prefix.
     """
     con = get_redis_connection("default")
-    keys = con.keys(f"{pattern}:*")
-    if keys:
-        con.delete(*keys)
+
+    # Always add * at the end if not present
+    if not pattern.endswith("*"):
+        pattern += "*"
+
+    # Scan all keys, decode bytes, and delete
+    deleted_count = 0
+    for key in con.scan_iter():
+        key_str = key.decode("utf-8") if isinstance(key, bytes) else str(key)
+        if pattern.replace("*", "") in key_str:
+            con.delete(key_str)
+            deleted_count += 1
+
+    logger.info(f"✅ Deleted {deleted_count} cache key(s) for pattern: {pattern}")

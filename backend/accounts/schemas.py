@@ -1,3 +1,10 @@
+
+from datetime import datetime
+from typing import Optional
+
+from pydantic import field_serializer
+from accounts.models import User, UserGallery
+from utils.helper import get_full_file_path
 from utils.schema_config import *
 
 
@@ -23,3 +30,103 @@ class UserInSchema(Schema):
         validate_number(value=self.role_id, field_name="Role ID", is_required=True)
         
         return self
+
+
+
+
+
+
+
+
+class OTPVerifySchema(Schema):
+    email: str
+    otp: int
+
+    @model_validator(mode="after")
+    def validate_all(self):
+        validate_email(value=self.email, field_name="Email", is_required=True)
+        validate_number(value=self.otp, field_name="OTP", is_required=True)
+        
+        return self
+
+
+
+
+
+
+
+
+class ChangePasswordSchema(Schema):
+    email: str
+    otp: int
+    password: str
+    confirm_password: str
+
+    @model_validator(mode="after")
+    def validate_all(self):
+        validate_email(value=self.email, field_name="Email", is_required=True)
+        validate_number(value=self.otp, field_name="OTP", is_required=True)
+        validate_password(value=self.password, field_name="Password", is_required=True)
+        validate_passwords_match(password=self.password, confirm_password=self.confirm_password)
+        
+        return self
+
+
+
+
+
+
+
+
+class LoginSchemaIn(Schema):
+    email: str
+    password: str
+
+
+
+
+
+
+
+class LoginSchemaOut(Schema):
+    id: int
+    first_name: str
+    last_name: str
+    email: str
+    role: str
+    is_authenticated: bool
+    access_token: str
+
+
+
+
+
+
+class UserGallerySchemaOut(Schema):
+    id: int
+    user_id: int
+    image: Optional[str] = None
+    thumbnail: Optional[str] = None
+    name: Optional[str] = None
+    uploaded_at: Optional[datetime] = None
+
+    @field_serializer("image")
+    def serialize_image(self, image, info):
+        request = info.context.get("request")
+        return get_full_file_path(request, image)
+    
+    @field_serializer("thumbnail")
+    def serialize_thumbnail(self, thumbnail, info):
+        request = info.context.get("request")
+        return get_full_file_path(request, thumbnail)
+
+
+
+
+
+
+
+class UserGallerySchemaOut(ModelSchema):
+    class Meta:
+        model = UserGallery
+        exclude = ["image_file"]

@@ -30,3 +30,4 @@ LOGGING = {
         "level": "INFO",
     },
 }
+
