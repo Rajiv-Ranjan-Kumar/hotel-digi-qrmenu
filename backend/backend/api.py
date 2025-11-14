@@ -1,5 +1,6 @@
 from ninja import NinjaAPI
 from accounts.api import router as accounts_router
+from hotels.api import router as hotels_router
 
 
 
@@ -15,3 +16,4 @@ api = NinjaAPI(
 
 # Add accounts router with tags
 api.add_router("/accounts/", accounts_router, tags=["Accounts"])
+api.add_router("/hotels/", hotels_router, tags=["Hotels"])

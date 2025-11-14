@@ -1,6 +1,12 @@
+import io
+import random
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+
+
+from utils.cloudinary_config import assign_cloudinary_data, upload_to_cloudinary
+from coresettings.models import Role
 
 
 
@@ -56,6 +62,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+    
+    class Meta:
+        ordering = ["-date_joined"]
+        verbose_name = "User"
+        verbose_name_plural = "Users"
 
     def __str__(self):
         return self.email
@@ -69,29 +80,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 
-class Role(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    description = models.TextField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
-
-
-
-
-
-
-
-
-
-
 class UserRole(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="roles")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="role")
     role = models.ForeignKey(Role, on_delete=models.CASCADE, related_name="users")
     assigned_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
-        unique_together = ("user", "role")
+        ordering = ["-assigned_at"]
+        verbose_name = "User Role"
+        verbose_name_plural = "User Roles"
 
     def __str__(self):
         return f"{self.user.email} → {self.role.name}"
@@ -104,24 +101,64 @@ class UserRole(models.Model):
 
 
 
-class ApiAccess(models.Model):
-    role = models.OneToOneField(Role, on_delete=models.CASCADE, related_name="api_access", unique=True)
-    path = models.CharField(max_length=255, default="__pending__")
 
-    can_get = models.BooleanField(default=False)
-    can_post = models.BooleanField(default=False)
-    can_put = models.BooleanField(default=False)
-    can_patch = models.BooleanField(default=False)
-    can_delete = models.BooleanField(default=False)
-
+class OtpHistory(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="otp_history")
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
     class Meta:
-        unique_together = ("role", "path")
+        ordering = ["-created_at"]
+        verbose_name = "OTP History"
+        verbose_name_plural = "OTP Histories"
 
     def __str__(self):
-        perms = []
-        if self.can_get: perms.append("GET")
-        if self.can_post: perms.append("POST")
-        if self.can_put: perms.append("PUT")
-        if self.can_patch: perms.append("PATCH")
-        if self.can_delete: perms.append("DELETE")
-        return f"{self.role.name} → {self.path} ({', '.join(perms) if perms else 'No Access'})"
+        return f"{self.user.email} - {self.otp}"
+
+    def generate_otp(self):
+        """Instance method to generate OTP and overwrite old one."""
+        self.otp = f"{random.randint(100000, 999999)}"
+        self.save(update_fields=["otp", "created_at"])
+        return self.otp
+
+    @classmethod
+    def get_or_create_with_otp(cls, user):
+        """Class method to get or create OTPHistory and generate new OTP."""
+        obj, created = cls.objects.get_or_create(user=user)
+        obj.generate_otp()
+        return obj
+
+
+
+
+
+
+
+
+
+
+
+
+class UserGallery(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="gallery")
+    original_image_url = models.URLField(blank=True, null=True)
+    optimized_image_url = models.URLField(blank=True, null=True)
+    auto_crop_image_url = models.URLField(blank=True, null=True)
+    public_id = models.CharField(max_length=255, blank=True, null=True, unique=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    image_file = models.ImageField(upload_to="temp_uploads/", blank=True, null=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
+
+    def __str__(self):
+        return f"Image {self.id} for {self.user.email if self.user else 'Unknown'}"
+
+    def save(self, *args, **kwargs):
+        if self.image_file and not self.original_image_url:
+            file_content = self.image_file.read()
+            upload_result = upload_to_cloudinary(io.BytesIO(file_content), self.image_file.name)
+            assign_cloudinary_data(self, upload_result)
+            self.image_file = None
+        super().save(*args, **kwargs)

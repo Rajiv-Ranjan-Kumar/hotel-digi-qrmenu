@@ -1,9 +1,7 @@
 import re
 from ninja.errors import HttpError
-from django.apps import apps
-from asgiref.sync import sync_to_async
-from django.db.models import Model
-from typing import Type
+
+
 
 
 
@@ -92,32 +90,3 @@ def validate_passwords_match(password, confirm_password):
         raise HttpError(status_code=400, message="Passwords do not match.")
     
     return True
-
-
-
-
-
-
-
-
-
-# def validate_model_id(model: Type[Model], value: int, field_name: str, is_required: bool = False) -> None:
-#     if is_required:
-#         validate_required(value, field_name=field_name)
-
-#     if not isinstance(value, int) or value <= 0:
-#         raise HttpError(status_code=400, message=f"{field_name} ID must be a positive integer.")
-
-#     if not model.objects.filter(id=value).exists():
-#         raise HttpError(status_code=404, message=f"{field_name} with ID {value} not found")
-    
-
-
-
-
-
-
-async def validate_model_id(model: Type[Model], value: int, field_name: str):
-    exists = await model.objects.filter(id=value).aexists()
-    if not exists:
-        raise HttpError(status_code=404, message=f"{field_name} with ID {value} not found")

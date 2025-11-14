@@ -18,7 +18,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #custom apps
+    "imagekit",
     'accounts',
+    'coresettings',
+    'hotels',
 ]
 
 MIDDLEWARE = [
@@ -75,10 +78,19 @@ AUTH_USER_MODEL = "accounts.User"
 
 
 # Redis Cache Configuration
+UPSTASH_REDIS_REST_URL = config("UPSTASH_REDIS_REST_URL", default=None)
+UPSTASH_REDIS_REST_TOKEN = config("UPSTASH_REDIS_REST_TOKEN", default=None)
+
+if UPSTASH_REDIS_REST_TOKEN:
+    REDIS_URL = f"rediss://default:{UPSTASH_REDIS_REST_TOKEN}@unbiased-hedgehog-32710.upstash.io:6379"
+else:
+    REDIS_URL = "redis://redis:6379/0"
+
+    
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": config("REDIS_URL", "redis://redis:6379/0"),
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -98,7 +110,23 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [config("REDIS_URL", "redis://redis:6379/1")],
+            "hosts": [REDIS_URL],
         },
     },
 }
+
+
+
+# media settings
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+
+# cloudinary settings
+CLOUDINARY_NAME = config("CLOUDINARY_NAME")
+CLOUDINARY_API_KEY = config("CLOUDINARY_API_KEY")
+CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET")
+CLOUDINARY_URL = config("CLOUDINARY_URL")
+
+CLOUDINARY_BASE_URL = config("CLOUDINARY_BASE_URL")
