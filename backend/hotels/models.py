@@ -1,8 +1,9 @@
 from django.db import models
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from accounts.models import User, UserGallery
+
+
 
 
 
@@ -18,9 +19,16 @@ class Hotel(models.Model):
     class Meta:
         verbose_name = _("Hotel")
         verbose_name_plural = _("Hotels")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "name"],
+                name="unique_hotel_per_owner"
+            )
+        ]
 
     def __str__(self):
         return self.name
+
 
 
 
@@ -34,8 +42,9 @@ class Branch(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name="branches")
     name = models.CharField(max_length=150)
     address = models.TextField()
-    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100, blank=True, null=True)
     state = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
     pincode = models.CharField(max_length=10, blank=True, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, blank=True, null=True)

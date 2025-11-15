@@ -1,10 +1,4 @@
-
-from datetime import datetime
-from typing import Optional
-
-from pydantic import field_serializer
-from accounts.models import User, UserGallery
-from utils.helper import get_full_file_path
+from accounts.models import UserGallery
 from utils.schema_config import *
 
 
@@ -99,26 +93,6 @@ class LoginSchemaOut(Schema):
 
 
 
-
-
-
-class UserGallerySchemaOut(Schema):
-    id: int
-    user_id: int
-    image: Optional[str] = None
-    thumbnail: Optional[str] = None
-    name: Optional[str] = None
-    uploaded_at: Optional[datetime] = None
-
-    @field_serializer("image")
-    def serialize_image(self, image, info):
-        request = info.context.get("request")
-        return get_full_file_path(request, image)
-    
-    @field_serializer("thumbnail")
-    def serialize_thumbnail(self, thumbnail, info):
-        request = info.context.get("request")
-        return get_full_file_path(request, thumbnail)
 
 
 
