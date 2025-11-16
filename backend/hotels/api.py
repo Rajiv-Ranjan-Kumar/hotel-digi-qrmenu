@@ -3,9 +3,10 @@ from ninja import Query, Router
 from ninja.pagination import paginate, PageNumberPagination
 
 from accounts.models import UserGallery
-from hotels.queries import add_new_hotel, delete_hotel_by_id, filter_hotel, get_hotel_by_id, update_hotel_by_id
+from hotels.models import Hotel
+from hotels.queries import add_new_hotel, add_new_hotel_branch, delete_hotel_by_id, filter_hotel, get_hotel_branch_by_id, get_hotel_by_id, update_hotel_branch_by_id, update_hotel_by_id
 from utils.helper import authorize_request, secure, validate_model_id
-from hotels.schema import HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut
+from hotels.schema import BranchSchemaIn, BranchSchemaOut, HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut
 
 
 
@@ -67,3 +68,42 @@ async def filter_hotels(request, filters: HotelSchemaFilter = Query(...), user_i
 async def delete_hotel(request, hotel_id: int, user_id: Optional[int] = None):
     hotel_obj = await delete_hotel_by_id(hotel_id=hotel_id, user_id=user_id)
     return {"detail": "Hotel deleted successfully."}
+
+
+
+
+
+
+
+
+
+@router.post("/hotel-branch", response=BranchSchemaOut, auth=secure())
+@authorize_request
+async def register_hotel_branch(request, payload: BranchSchemaIn, user_id: Optional[int] = None):
+    await validate_model_id(value=payload.hotel_id, model=Hotel, field_name="Hotel")
+    branch = await add_new_hotel_branch(payload=payload, user_id=user_id)
+    return branch
+
+
+
+
+
+
+
+@router.put("/hotel-branch/{branch_id}", response=BranchSchemaOut, auth=secure())
+@authorize_request
+async def update_hotel_branch(request, branch_id: int, payload: BranchSchemaIn, user_id: Optional[int] = None):
+    await validate_model_id(value=payload.hotel_id, model=Hotel, field_name="Hotel")
+    branch = await update_hotel_branch_by_id(branch_id=branch_id, payload=payload, user_id=user_id)
+    return branch
+
+
+
+
+
+
+@router.get("/hotel-branch/{branch_id}", response=BranchSchemaOut, auth=secure())
+@authorize_request
+async def get_hotel_branch(request, branch_id: int, user_id: Optional[int] = None):
+    branch = await get_hotel_branch_by_id(branch_id=branch_id, user_id=user_id)
+    return branch

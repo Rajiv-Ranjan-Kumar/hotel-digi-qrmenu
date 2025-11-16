@@ -6,5 +6,6 @@ from validators.base import (
     validate_number,
     validate_password,
     validate_passwords_match, 
-    validate_string
+    validate_string,
+    validate_decimal_number
 )

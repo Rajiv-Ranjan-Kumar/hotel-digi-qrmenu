@@ -4,11 +4,7 @@ from typing import Optional
 
 from .auth_backend import generate_jwt_token
 from utils.cache_config import cache_data
-from utils.cloudinary_config import assign_cloudinary_data, delete_from_cloudinary, upload_images_bulk
-
-from PIL import Image
-from io import BytesIO
-from django.core.files.base import ContentFile
+from utils.cloudinary_config import assign_cloudinary_data, upload_images_bulk
 
 
 from .models import OtpHistory, User, UserGallery, UserRole
