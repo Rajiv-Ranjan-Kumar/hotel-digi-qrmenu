@@ -1,3 +1,4 @@
+from decimal import Decimal
 import re
 from ninja.errors import HttpError
 
@@ -58,6 +59,39 @@ def validate_number(value: int, field_name: str = "Field", is_required: bool = F
         raise HttpError(status_code=400, message=f"{field_name} must be a positive number")
     
     return value
+
+
+
+
+
+
+
+
+
+
+def validate_decimal_number(value, field_name: str = "Field", is_required: bool = False, max_digits: int = 9, decimal_places: int = 6):
+    if is_required:
+        validate_required(value, field_name=field_name)
+
+    try:
+        decimal_value = Decimal(str(value))
+    except:
+        raise HttpError(status_code=400, message=f"{field_name} must be a valid decimal number")
+
+    if decimal_value <= 0:
+        raise HttpError(status_code=400, message=f"{field_name} must be a positive number")
+
+    digits_str = str(decimal_value).replace("-", "").replace(".", "")
+    
+    if len(digits_str) > max_digits:
+        raise HttpError(status_code=400, message=f"{field_name} must have max {max_digits} total digits")
+
+    decimal_str = str(decimal_value).split(".")[1] if "." in str(decimal_value) else ""
+    
+    if len(decimal_str) > decimal_places:
+        raise HttpError(status_code=400, message=f"{field_name} must have max {decimal_places} decimal places")
+
+    return decimal_value
 
 
 

@@ -54,6 +54,12 @@ class Branch(models.Model):
     class Meta:
         verbose_name = _("Branch")
         verbose_name_plural = _("Branches")
+        constraints = [
+            models.UniqueConstraint(
+                fields=['hotel', 'name'],
+                name='unique_branch_per_hotel'
+            )
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.hotel.name})"

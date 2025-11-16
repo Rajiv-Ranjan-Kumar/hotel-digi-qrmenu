@@ -1,0 +1,4 @@
+/* input.css */
+@import "tailwindcss";
+@import "./assets/themes/light.scss";
+@import "./assets/themes/dark.scss";

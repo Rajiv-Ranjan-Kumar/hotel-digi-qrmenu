@@ -1,6 +1,6 @@
 from typing import Optional
 from accounts.schemas import UserGallerySchemaOut
-from hotels.models import Hotel
+from hotels.models import Branch, Hotel
 from utils.schema_config import *
 
 
@@ -60,21 +60,23 @@ class HotelSchemaOut(ModelSchema):
 
 
 class BranchSchemaIn(ModelSchema):
+    hotel_id: int
+
     class Meta:
-        model = Hotel
-        exclude = ["id","hotel","is_active","created_at"]
-        
+        model = Branch
+        exclude = ["id", "is_active", "created_at", "hotel"]
+
     @model_validator(mode="after")
     def validate_all(self):
+        validate_number(value=self.hotel_id, field_name="Hotel", is_required=True)
         validate_string(value=self.name, field_name="Branch Name", is_required=True)
         validate_string(value=self.address, field_name="Address", is_required=True)
         validate_string(value=self.country, field_name="Country", is_required=True)
         validate_string(value=self.state, field_name="State", is_required=True)
         validate_string(value=self.city, field_name="City", is_required=True)
-        validate_email(value=self.pincode, field_name="Pincode", is_required=True)
-        validate_number(value=self.latitude, field_name="Latitude", is_required=False)
-        validate_number(value=self.longitude, field_name="Longitude", is_required=False)
-        
+        validate_number(value=int(self.pincode), field_name="Pincode", is_required=True)
+        validate_decimal_number(value=self.latitude, field_name="Latitude", is_required=False)
+        validate_decimal_number(value=self.longitude, field_name="Longitude", is_required=False)
         return self
 
 
@@ -88,5 +90,5 @@ class BranchSchemaIn(ModelSchema):
 
 class BranchSchemaOut(ModelSchema):
     class Meta:
-        model = Hotel
-        fields = "__all__"
+        model = Branch
+        fields = ["id", "hotel", "name", "address", "country", "state", "city", "pincode", "latitude", "longitude", "is_active", "created_at"]
