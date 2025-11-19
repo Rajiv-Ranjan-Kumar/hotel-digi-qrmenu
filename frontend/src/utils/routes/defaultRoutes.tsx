@@ -1,11 +1,36 @@
+import { lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import { DefaultLayout } from "../../layouts/DefaultLayout";
-import { lazy } from "react";
-
 
 
 const Home = lazy(() => import("../../pages/Home"));
+const NotFound = lazy(() => import("../../pages/NotFound"));
 const Login = lazy(() => import("../../pages/auth/Login"));
+const SignUp = lazy(() => import("../../pages/auth/Signup"));
+const ForgotPassword = lazy(() => import("../../pages/auth/ForgotPassword"));
+const OtpVerification = lazy(() => import("../../pages/auth/OtpVerification"));
+const ResetPassword = lazy(() => import("../../pages/auth/ResetPassword"));
+
+
+
+
+
+
+
+
+
+
+
+export const defaultRoutes = {
+    login: { path: "/auth/login", element: <Login /> },
+    signup: { path: "/auth/signup", element: <SignUp /> },
+    forgotPassword: { path: "/auth/forgot-password", element: <ForgotPassword /> },
+    otpVerification: { path: "/auth/otp-verification", element: <OtpVerification /> },
+    resetPassword: { path: "/auth/reset-password", element: <ResetPassword /> },
+};
+
+
+
 
 
 
@@ -14,10 +39,13 @@ export const DefaultRoutes = () => {
     return (
         <Routes>
             <Route element={<DefaultLayout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/auth/login" element={<Login />} />
-                {/* <Route path="/admin/hotels" element={<Hotels />} />
-        <Route path="/admin/users" element={<Users />} /> */}
+                <Route index element={<Home />} />
+
+                {Object.values(defaultRoutes).map((route) => (
+                    <Route key={route.path} path={route.path} element={route.element} />
+                ))}
+
+                <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>
     );

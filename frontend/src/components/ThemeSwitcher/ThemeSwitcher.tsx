@@ -66,9 +66,7 @@ export const ThemeSwitcher = () => {
                 onClick={toggleTheme}
                 className="
                     relative w-12 h-7 p-0
-                    bg-white/30 dark:bg-black/30
-                    backdrop-blur-md
-                    border border-white/20 dark:border-black/20
+                    bg-(--secondary-bg-color)
                     shadow-lg
                     transition-all duration-300
                 "
