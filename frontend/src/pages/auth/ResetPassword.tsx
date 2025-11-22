@@ -78,7 +78,7 @@ export default function ResetPassword() {
 
         if (Object.keys(validationErrors).length === 0) {
             alert("Password Reset Successful!");
-            navigate(defaultRoutes.login.path);
+            navigate(defaultRoutes.passwordResetSuccess.path);
         }
     };
 

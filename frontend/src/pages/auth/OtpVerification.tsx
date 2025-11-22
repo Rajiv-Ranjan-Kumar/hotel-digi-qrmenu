@@ -14,6 +14,7 @@ export default function OtpVerification() {
     const location = useLocation();
 
     const email = location.state?.email || "";
+    const from = location.state?.from || "";
 
     const [otp, setOtp] = useState(Array(6).fill(""));
     const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -72,7 +73,11 @@ export default function OtpVerification() {
         }
 
         alert(`OTP Verified: ${finalOtp}`);
-        navigate(defaultRoutes.resetPassword.path);
+
+
+        if (from === "signup") navigate(defaultRoutes.resetPassword.path);
+        else if (from === "forgotpassword") navigate(defaultRoutes.resetPassword.path);
+        else navigate(defaultRoutes.login.path);
     };
 
 
