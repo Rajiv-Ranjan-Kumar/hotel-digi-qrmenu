@@ -3,8 +3,8 @@ import { AdminRoutes } from "./adminRoutes";
 import { ManagerRoutes } from "./managerRoutes";
 import { StaffRoutes } from "./staffRoutes";
 import { DefaultRoutes } from "./defaultRoutes";
-import CentralizeDrawer from "../../context/drawerProvider/CentralizeDrawer";
-import { DrawerProvider } from "../../context/drawerProvider/DrawerProviderContex";
+import CentralizeDrawer from "../../contexts/drawerProvider/CentralizeDrawer";
+import { DrawerProvider } from "../../contexts/drawerProvider/DrawerProviderContex";
 
 
 

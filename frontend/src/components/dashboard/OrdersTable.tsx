@@ -1,6 +1,6 @@
 // src/components/OrdersTable.tsx
 import React from "react";
-import { Edit2, Trash2 } from "lucide-react";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Badge } from "flowbite-react";
 
 const orders = [
@@ -43,8 +43,8 @@ export default function OrdersTable() {
                             <td className="p-3"><StatusBadge status={o.status} /></td>
                             <td className="p-3">{o.time}</td>
                             <td className="p-3 flex gap-2">
-                                <button className="p-2 rounded-lg hover:bg-[var(--accent-color)]/10"><Edit2 size={16} /></button>
-                                <button className="p-2 rounded-lg hover:bg-[var(--button-danger)]/10"><Trash2 size={16} /></button>
+                                <button className="p-2 rounded-lg hover:bg-[var(--accent-color)]/10"><PencilSquareIcon className="w-4 h-4 text-[var(--accent-color)]" /></button>
+                                <button className="p-2 rounded-lg hover:bg-[var(--button-danger)]/10"><TrashIcon className="w-4 h-4 text-red-400" /></button>
                             </td>
                         </tr>
                     ))}

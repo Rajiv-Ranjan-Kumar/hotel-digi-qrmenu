@@ -1,4 +1,4 @@
-import { Bars3Icon, BuildingOffice2Icon, ChatBubbleLeftRightIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { BuildingOffice2Icon, ChatBubbleLeftRightIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Dropdown } from "flowbite-react";
 import { motion } from "framer-motion";
 import NotificationDropdown from "./NotificationsDropdown";
@@ -16,12 +16,11 @@ export default function Header() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.4 }}
             className="
-                top-0 z-40 
+                sticky top-0 z-40 
                 backdrop-blur-2xl
                 bg-(--secondary-bg-color)/70
                 border-b border-(--accent-color)/20
                 shadow-[0_4px_12px_rgba(0,0,0,0.15)]
-                relative
             "
         >
             {/* Accent Line */}

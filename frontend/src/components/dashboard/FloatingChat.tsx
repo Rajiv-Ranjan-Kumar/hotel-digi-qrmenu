@@ -1,6 +1,6 @@
 // src/components/FloatingChat.tsx
 import React, { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 
 export default function FloatingChat() {
@@ -18,15 +18,15 @@ export default function FloatingChat() {
     }
     return (
         <>
-            <button onClick={() => setOpen(true)} className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform" style={{ background: "var(--accent-color)", color: "var(--primary-text-color)" }}>
-                <MessageCircle size={20} />
+                <button onClick={() => setOpen(true)} className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-lg transform hover:scale-105 transition-transform" style={{ background: "var(--accent-color)", color: "var(--primary-text-color)" }}>
+                <ChatBubbleLeftIcon className="w-5 h-5" />
             </button>
             {open && (
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.18 }} className="fixed bottom-20 right-6 z-50 w-80 bg-[var(--secondary-bg-color)] rounded-2xl shadow-lg flex flex-col overflow-hidden">
                     <div className="flex items-center justify-between p-3 border-b border-[rgba(255,255,255,0.03)]">
                         <div className="font-medium">Support</div>
                         <div className="flex items-center gap-2">
-                            <button onClick={() => setOpen(false)} className="p-2 rounded-md hover:bg-[var(--accent-color)]/10"><X size={16} /></button>
+                            <button onClick={() => setOpen(false)} className="p-2 rounded-md hover:bg-[var(--accent-color)]/10"><XMarkIcon className="w-4 h-4" /></button>
                         </div>
                     </div>
                     <div className="p-3 flex-1 overflow-auto space-y-2">

@@ -3,6 +3,7 @@ import Sidebar from "../components/dashboard/Sidebar";
 import { useState } from "react";
 import { Bars3Icon, Cog6ToothIcon, CubeIcon, HomeIcon, Squares2X2Icon, TagIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Header from "../components/dashboard/Header";
+import { managerRoutes } from "../utils/routes/managerRoutes";
 
 
 
@@ -15,8 +16,8 @@ export const ManagerLayout = () => {
 
 
     const sidebarItems = [
-        { to: "/dashboard", title: "Dashboard", icon: HomeIcon },
-        { to: "/categories", title: "Categories", icon: TagIcon },
+        { to: managerRoutes.dashboard.path, title: "Dashboard", icon: HomeIcon },
+        { to: managerRoutes.categories.path, title: "Categories", icon: TagIcon },
         { to: "/menu-items", title: "Menu Items", icon: CubeIcon },
         { to: "/orders", title: "Orders", icon: Bars3Icon },
         { to: "/branches", title: "Branches", icon: Squares2X2Icon },

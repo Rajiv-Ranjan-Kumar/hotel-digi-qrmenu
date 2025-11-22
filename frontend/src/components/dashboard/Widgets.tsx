@@ -1,13 +1,13 @@
 // src/components/Widgets.tsx
 import React from "react";
-import { Truck, Clock, CheckCircle, MessageSquare } from "lucide-react";
+import { TruckIcon, ClockIcon, CheckCircleIcon, ChatBubbleLeftIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 
 const data = [
-    { id: "w1", label: "Total Orders", value: 1284, icon: Truck, colorVar: "var(--order-color)" },
-    { id: "w2", label: "In-Progress", value: 42, icon: Clock, colorVar: "var(--pickup-color)" },
-    { id: "w3", label: "Delivered", value: 1200, icon: CheckCircle, colorVar: "var(--delivered-color)" },
-    { id: "w4", label: "Feedbacks", value: 312, icon: MessageSquare, colorVar: "var(--feedback-color)" },
+    { id: "w1", label: "Total Orders", value: 1284, icon: TruckIcon, colorVar: "var(--order-color)" },
+    { id: "w2", label: "In-Progress", value: 42, icon: ClockIcon, colorVar: "var(--pickup-color)" },
+    { id: "w3", label: "Delivered", value: 1200, icon: CheckCircleIcon, colorVar: "var(--delivered-color)" },
+    { id: "w4", label: "Feedbacks", value: 312, icon: ChatBubbleLeftIcon, colorVar: "var(--feedback-color)" },
 ];
 
 export default function Widgets() {
@@ -22,7 +22,7 @@ export default function Widgets() {
                             <div className="text-sm text-[var(--secondary-text-color)]">{card.label}</div>
                         </div>
                         <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,255,255,0.02)" }}>
-                            <Icon size={22} style={{ color: card.colorVar }} />
+                            <Icon className="w-5 h-5" style={{ color: card.colorVar }} />
                         </div>
                     </motion.div>
                 );
