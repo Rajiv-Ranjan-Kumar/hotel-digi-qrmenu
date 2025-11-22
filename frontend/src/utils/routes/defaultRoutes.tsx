@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { DefaultLayout } from "../../layouts/DefaultLayout";
 
 
+
 const Home = lazy(() => import("../../pages/Home"));
 const NotFound = lazy(() => import("../../pages/NotFound"));
 const Login = lazy(() => import("../../pages/auth/Login"));
@@ -10,6 +11,7 @@ const SignUp = lazy(() => import("../../pages/auth/Signup"));
 const ForgotPassword = lazy(() => import("../../pages/auth/ForgotPassword"));
 const OtpVerification = lazy(() => import("../../pages/auth/OtpVerification"));
 const ResetPassword = lazy(() => import("../../pages/auth/ResetPassword"));
+const PasswordResetSuccess = lazy(() => import("../../pages/auth/PasswordResetSuccess"));
 
 
 
@@ -27,6 +29,7 @@ export const defaultRoutes = {
     forgotPassword: { path: "/auth/forgot-password", element: <ForgotPassword /> },
     otpVerification: { path: "/auth/otp-verification", element: <OtpVerification /> },
     resetPassword: { path: "/auth/reset-password", element: <ResetPassword /> },
+    passwordResetSuccess: { path: "/auth/password-reset-success", element: <PasswordResetSuccess /> },
 };
 
 

@@ -119,6 +119,8 @@ export default function Signup() {
         if (Object.keys(validationErrors).length === 0) {
             console.log("Signup Data:", form);
             alert("Signup Successful");
+
+            navigate(defaultRoutes.otpVerification.path, { state: { email: form.email, from: "signup" }, replace: true });
         }
     };
 

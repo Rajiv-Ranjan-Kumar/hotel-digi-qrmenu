@@ -65,7 +65,7 @@ export default function ForgotPassword() {
 
         if (Object.keys(validationErrors).length === 0) {
             alert(`OTP sent to ${form.email}`);
-            navigate(defaultRoutes.otpVerification.path, { state: { email: form.email }, replace: true });
+            navigate(defaultRoutes.otpVerification.path, { state: { email: form.email, from: "forgotpassword" }, replace: true });
         }
     };
 
