@@ -125,7 +125,7 @@ async def add_new_user(payload):
 
 
 
-async def account_verify(payload):
+async def otp_verify(payload):
     try:
         # User exist check (inactive)
         if not await is_user_exist(email=payload.email, is_active=False):
@@ -161,7 +161,7 @@ async def account_verify(payload):
 
 async def generate_and_send_otp(email: str):
     try:
-        if not await is_user_exist(email=email):
+        if not await is_user_exist(email=email, is_active=False):
             raise HttpError(status_code=400, message="User not found with this email")
 
         def generate_otp():
@@ -238,10 +238,13 @@ async def authenticate_user(payload):
 
         access_token = await sync_to_async(generate_jwt_token)(user=user)
 
-        return {k: getattr(user, k) for k in ("id", "first_name", "last_name", "email")} | {
-            "role": role,
-            "is_authenticated": user.is_authenticated,
+        user_fields = ("id", "first_name", "last_name", "email")
+
+
+        return {
             "access_token": access_token,
+            "is_authenticated": user.is_authenticated,
+            "profile": {**{field: getattr(user, field) for field in user_fields}, "role": role}
         }
 
     except HttpError:

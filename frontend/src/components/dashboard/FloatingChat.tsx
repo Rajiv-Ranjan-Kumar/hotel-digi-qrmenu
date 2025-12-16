@@ -1,5 +1,5 @@
 // src/components/FloatingChat.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChatBubbleLeftIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 

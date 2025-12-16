@@ -82,14 +82,21 @@ class LoginSchemaIn(Schema):
 
 
 
-class LoginSchemaOut(Schema):
+class ProfileSchemaOut(Schema):
     id: int
     first_name: str
     last_name: str
     email: str
     role: str
-    is_authenticated: bool
+
+
+
+
+
+class LoginSchemaOut(Schema):
     access_token: str
+    is_authenticated: bool
+    profile: ProfileSchemaOut
 
 
 

@@ -4,14 +4,27 @@ from ninja.pagination import paginate, PageNumberPagination
 
 from accounts.models import UserGallery
 from hotels.models import Hotel
-from hotels.queries import add_new_hotel, add_new_hotel_branch, delete_hotel_by_id, filter_hotel, get_hotel_branch_by_id, get_hotel_by_id, update_hotel_branch_by_id, update_hotel_by_id
+from hotels.queries import add_new_hotel, add_new_hotel_branch, delete_hotel_by_id, filter_hotel, get_hotel_branch_by_id, get_hotel_by_id, get_manager_dashboard_data, update_hotel_branch_by_id, update_hotel_by_id
 from utils.helper import authorize_request, secure, validate_model_id
-from hotels.schema import BranchSchemaIn, BranchSchemaOut, HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut
+from hotels.schema import BranchSchemaIn, BranchSchemaOut, HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut, ManagerDashboardInitialDataSchemaOut
 
 
 
 
 router = Router()
+
+
+
+
+
+
+@router.get("/manager/initial-data", response=ManagerDashboardInitialDataSchemaOut, auth=secure())
+@authorize_request
+async def get_manager_initial_data(request, user_id: Optional[int] = None):
+    hotels = await get_manager_dashboard_data(user_id=user_id)
+    return hotels
+
+
 
 
 

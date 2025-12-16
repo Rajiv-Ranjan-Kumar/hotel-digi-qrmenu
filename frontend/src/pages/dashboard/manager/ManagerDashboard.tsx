@@ -1,15 +1,20 @@
-import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 import { useEffect } from "react";
-import { useDrawer } from "../../contexts/drawerProvider/DrawerProviderContex";
+import { useDrawer } from "../../../contexts/drawerProvider/DrawerProviderContex";
 
-import Widgets from "../../components/dashboard/Widgets";
-import { DailySalesChart } from "../../components/dashboard/Graphs/DailySalesChart";
-import { CategoryOrdersChart } from "../../components/dashboard/Graphs/CategoryOrdersChart";
-import OrdersTable from "../../components/dashboard/OrdersTable";
-import FloatingChat from "../../components/dashboard/FloatingChat";
+import Widgets from "../../../components/dashboard/Widgets";
+import { DailySalesChart } from "../../../components/dashboard/Graphs/DailySalesChart";
+import { CategoryOrdersChart } from "../../../components/dashboard/Graphs/CategoryOrdersChart";
+import OrdersTable from "../../../components/dashboard/OrdersTable";
+import FloatingChat from "../../../components/dashboard/FloatingChat";
 import { Card } from "flowbite-react";
+import { usePoll } from "../../../hooks/usePoll";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../../store/store";
+import { loadMenu } from "../../../store/slice/menuSlice";
+
+
 
 
 
@@ -17,14 +22,39 @@ import { Card } from "flowbite-react";
 
 
 export default function Dashboard() {
+    const { count } = useSelector((state: RootState) => state.hotels);
     const { openDrawer } = useDrawer();
+   
+
+
+    const dispatch = useDispatch<AppDispatch>();
+    const menu = useSelector((state: RootState) => state.menu.items);
+
+    // usePoll(() => dispatch(loadMenu()), 30000);
+
+
+    console.log("Menu Items:", menu);
+
+
+
+
 
     useEffect(() => {
-        openDrawer("order", { orderId: "OD1020" });
-    }, []);
+        if (count < 1) {
+            openDrawer("registerHotel");
+        }
+    }, [count]);
+
+
+    // useEffect(() => {
+    //     openDrawer("order", { orderId: "OD1020" });
+    // }, []);
+
+
+    
 
     return (
-        <div className="min-h-screen flex bg-[var(--primary-bg-color)] text-[var(--primary-text-color)]">
+        <div className="min-h-screen flex bg-(--primary-bg-color) text-(--primary-text-color)">
 
             <div className="flex-1 flex flex-col">
                 <main className="p-6 space-y-6">

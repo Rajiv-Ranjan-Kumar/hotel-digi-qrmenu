@@ -12,6 +12,7 @@ const ForgotPassword = lazy(() => import("../../pages/auth/ForgotPassword"));
 const OtpVerification = lazy(() => import("../../pages/auth/OtpVerification"));
 const ResetPassword = lazy(() => import("../../pages/auth/ResetPassword"));
 const PasswordResetSuccess = lazy(() => import("../../pages/auth/PasswordResetSuccess"));
+const AccountSuccess = lazy(() => import("../../pages/auth/AccountSuccess"));
 
 
 
@@ -30,6 +31,7 @@ export const defaultRoutes = {
     otpVerification: { path: "/auth/otp-verification", element: <OtpVerification /> },
     resetPassword: { path: "/auth/reset-password", element: <ResetPassword /> },
     passwordResetSuccess: { path: "/auth/password-reset-success", element: <PasswordResetSuccess /> },
+    accountSuccess: { path: "/auth/account-success", element: <AccountSuccess /> },
 };
 
 

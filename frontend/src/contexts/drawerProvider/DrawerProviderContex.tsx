@@ -97,7 +97,7 @@ export function DrawerProvider({ children, drawers = {}, }: { children: React.Re
                                 animate={{ x: 0 }}
                                 exit={{ x: "100%" }}
                                 transition={{ duration: 0.3 }}
-                                className="fixed top-0 right-0 h-full w-80 z-[9999]"
+                                className="fixed top-0 right-0 h-full w-80 z-9999"
                             >
 
                                 <Comp

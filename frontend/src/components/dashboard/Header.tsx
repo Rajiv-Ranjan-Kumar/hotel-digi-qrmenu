@@ -1,15 +1,34 @@
-import { BuildingOffice2Icon, ChatBubbleLeftRightIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { ChatBubbleLeftRightIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Dropdown } from "flowbite-react";
 import { motion } from "framer-motion";
 import NotificationDropdown from "./NotificationsDropdown";
 import ThemeDropdown from "./ThemeDropdown";
 import BranchSelectDropdown from "./BranchSelectDropdown";
+import { useDispatch } from "react-redux";
+import { logout } from "../../store/slice/userSlice";
+import { useNavigate } from "react-router-dom";
+import { defaultRoutes } from "../../utils/routes/defaultRoutes";
+import HotelSelectDropdown from "./HotelSelectDropdown";
 
 
 
 
 
-export default function Header() {
+export default function Header({ fromDashboard = true }: { fromDashboard?: boolean }) {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+
+
+
+    const handleLogout = () => {
+        dispatch(logout());
+        navigate(defaultRoutes.login.path, { replace: true });
+    };
+
+
+
+
     return (
         <motion.header
             initial={{ y: -20, opacity: 0 }}
@@ -41,83 +60,61 @@ export default function Header() {
             <div className="px-6 py-3 flex items-center justify-between">
 
                 {/* LEFT SECTION */}
-                <div className="flex items-center gap-5">
+                {fromDashboard ? (
+                    <div className="flex items-center gap-5">
+                        <HotelSelectDropdown />
 
-                    {/* TOGGLE BUTTON */}
-                    {/* <div
-                        onClick={onToggle}
-                        className="
-                            flex items-center justify-center
-                            w-12 h-12 rounded-xl 
-                            bg-(--primary-bg-color)/40
-                            hover:bg-(--accent-color)/20
-                            cursor-pointer shadow-md
-                            transition
-                        "
-                    >
-                        <img 
-                            src="/hotel-logo.png" 
-                            alt="Hotel Logo" 
-                            className="w-8 h-8 object-contain"
-                        />
-                    </div> */}
-                    <div className="p-1 bg-(--primary-bg-color) rounded-md">
-                        <BuildingOffice2Icon className="w-7 h-7 text-(--accent-color)" />
+                        {/* PROFESSIONAL BRANCH DROPDOWN */}
+                        <BranchSelectDropdown />
                     </div>
+                ):(
+                    <div className="flex items-center gap-2 select-none">
+                        <img 
+                            src="/logo.png" 
+                            alt="Logo" 
+                            className="h-8 w-8 object-cover" 
+                        />
+                        <h1 className="text-lg font-semibold">MyHotel</h1>
+                    </div>
+                )}
 
-
-                    {/* TITLE */}
-                    <motion.h1
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="
-                            text-xl font-semibold tracking-wide
-                            text-(--primary-text-color)
-                        "
-                    >
-                        Royal Orchid Hotel
-                    </motion.h1>
-
-
-                    {/* PROFESSIONAL BRANCH DROPDOWN */}
-                    <BranchSelectDropdown />
-
-                </div>
 
                 {/* RIGHT SECTION */}
                 <div className="flex items-center gap-4">
-
-                    {/* ADD ORDER ICON */}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="
+                    {fromDashboard && (
+                        <>
+                            {/* ADD ORDER ICON */}
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="
                             p-2 rounded-xl 
                             bg-(--primary-bg-color)/40 
                             hover:bg-(--accent-color)/20 
                             shadow cursor-pointer transition
                         "
-                    >
-                        <PlusCircleIcon className="w-6 h-6 text-(--accent-color)" />
-                    </motion.button>
+                            >
+                                <PlusCircleIcon className="w-6 h-6 text-(--accent-color)" />
+                            </motion.button>
 
-                    {/* NOTIFICATION ICON */}
-                    <NotificationDropdown />
+                            {/* NOTIFICATION ICON */}
+                            <NotificationDropdown />
 
-                    {/* MESSAGE ICON */}
-                    <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="
+                            {/* MESSAGE ICON */}
+                            <motion.button
+                                whileHover={{ scale: 1.1 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="
                             p-2 rounded-xl 
                             bg-(--primary-bg-color)/40 
                             hover:bg-(--accent-color)/20 
                             shadow cursor-pointer transition
                         "
-                    >
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-(--primary-text-color)" />
-                    </motion.button>
+                            >
+                                <ChatBubbleLeftRightIcon className="w-5 h-5 text-(--primary-text-color)" />
+                            </motion.button>
+                        </>
+                    )}
 
                     {/* THEME TOGGLER */}
                     <ThemeDropdown />
@@ -167,7 +164,7 @@ export default function Header() {
                                 Profile
                             </button>
 
-                            <button className="block w-full px-4 py-2 text-sm text-(--primary-text-color) hover:bg-(--accent-color)/10 cursor-pointer">
+                            <button onClick={handleLogout} className="block w-full px-4 py-2 text-sm text-(--primary-text-color) hover:bg-(--accent-color)/10 cursor-pointer">
                                 Logout
                             </button>
                         </motion.div>

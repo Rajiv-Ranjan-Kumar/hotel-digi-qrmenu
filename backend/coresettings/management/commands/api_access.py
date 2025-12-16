@@ -12,6 +12,7 @@ EXCLUDE_PATHS = [
     "/api/accounts/send-otp/{email}",
     "/api/accounts/change-password",
     "/api/accounts/login",
+    "/api/coresettings/role",
 ]
 
 
