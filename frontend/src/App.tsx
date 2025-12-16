@@ -1,5 +1,8 @@
+import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AppRoutes } from "./utils/routes/AppRoutes";
+import { Suspense } from "react";
+
 
 
 
@@ -7,9 +10,12 @@ import { AppRoutes } from "./utils/routes/AppRoutes";
 function App() {
   return (
     <ThemeProvider>
-      <AppRoutes />
+      <BrowserRouter>
+        <Suspense fallback={<div>Loading Website...</div>}>
+          <AppRoutes />
+        </Suspense>
+      </BrowserRouter>
     </ThemeProvider>
-
   );
 }
 

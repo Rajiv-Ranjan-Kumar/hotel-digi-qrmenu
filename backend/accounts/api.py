@@ -7,7 +7,7 @@ from validators.base import validate_email
 from accounts.schemas import ChangePasswordSchema, LoginSchemaIn, LoginSchemaOut, OTPVerifySchema, UserGallerySchemaOut, UserInSchema
 from utils.helper import authorize_request, secure, validate_model_id
 from accounts.queries import (
-    account_verify,
+    otp_verify,
     add_new_user,
     authenticate_user,
     delete_user_gallery_image,
@@ -39,18 +39,6 @@ async def create_account(request, payload: UserInSchema):
 
 
 
-
-
-@router.post("/verify-account", response={200: dict})
-async def verify_account(request, payload: OTPVerifySchema):
-    await account_verify(payload)
-    return {"message": "Account Verification Successfully."}
-
-
-
-
-
-
 @router.post("/send-otp/{email}", response={200: dict})
 async def send_otp(request, email: str):
     validate_email(value=email, field_name="Email", is_required=True)
@@ -58,6 +46,15 @@ async def send_otp(request, email: str):
     return {"message": "OTP send Successfully."}
 
 
+
+
+
+
+
+@router.post("/verify-otp", response={200: dict})
+async def verify_OTP(request, payload: OTPVerifySchema):
+    await otp_verify(payload)
+    return {"message": "OTP Verification Successfully."}
 
 
 

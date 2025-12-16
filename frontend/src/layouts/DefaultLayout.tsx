@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 
+
 export const DefaultLayout = () => {
     return (
         <div className="flex flex-col min-h-screen bg-(--primary-bg-color) text-(--primary-text-color)">

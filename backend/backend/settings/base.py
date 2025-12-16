@@ -5,11 +5,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="insecure-secret")
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=lambda v: [s.strip() for s in v.split(",")])
 
 INSTALLED_APPS = [
+     "corsheaders",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -130,3 +132,22 @@ CLOUDINARY_API_SECRET = config("CLOUDINARY_API_SECRET")
 CLOUDINARY_URL = config("CLOUDINARY_URL")
 
 CLOUDINARY_BASE_URL = config("CLOUDINARY_BASE_URL")
+
+
+
+
+
+# Agar sirf specific origin allow karna ho:
+CORS_ALLOWED_ORIGINS = [
+    "https://super-memory-p4wwwv9jwj939w6q-5173.app.github.dev",
+    "http://localhost:5173"
+]
+
+
+# Agar sab allow karna ho (development ke liye):
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+# Optionally, allow all headers and methods
+CORS_ALLOW_HEADERS = ["*"]  # Allow all headers
+CORS_ALLOW_METHODS = ["*"]  # Allow all HTTP methods (GET, POST, PUT, etc.)

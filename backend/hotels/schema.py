@@ -1,4 +1,5 @@
-from typing import Optional
+from typing import Optional, List
+
 from accounts.schemas import UserGallerySchemaOut
 from hotels.models import Branch, Hotel
 from utils.schema_config import *
@@ -92,3 +93,14 @@ class BranchSchemaOut(ModelSchema):
     class Meta:
         model = Branch
         fields = ["id", "hotel", "name", "address", "country", "state", "city", "pincode", "latitude", "longitude", "is_active", "created_at"]
+
+
+
+
+
+
+
+
+class ManagerDashboardInitialDataSchemaOut(BaseModel):
+    items: List[dict]
+    count: int

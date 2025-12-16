@@ -117,7 +117,7 @@ class OtpHistory(models.Model):
 
     def generate_otp(self):
         """Instance method to generate OTP and overwrite old one."""
-        self.otp = f"{random.randint(100000, 999999)}"
+        self.otp = f"{random.randint(1000, 9999)}"
         self.save(update_fields=["otp", "created_at"])
         return self.otp
 

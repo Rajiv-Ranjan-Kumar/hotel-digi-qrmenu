@@ -5,7 +5,7 @@ from django.db import transaction
 from django.db import IntegrityError
 from utils.cache_config import cache_data
 from hotels.models import Branch, Hotel
-from hotels.schema import BranchSchemaIn, BranchSchemaOut, HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut
+from hotels.schema import BranchSchemaIn, BranchSchemaOut, HotelSchemaFilter, HotelSchemaIn, HotelSchemaOut, ManagerDashboardInitialDataSchemaOut
 from ninja.errors import HttpError
 from asgiref.sync import sync_to_async
 
@@ -267,3 +267,48 @@ async def get_hotel_branch_by_id(branch_id: int, user_id: Optional[int] = None) 
     except Exception as e:
         logger.error(f"Unexpected error while fetching branch by ID: {e}", exc_info=True)
         raise HttpError(status_code=500, message="Something went wrong while fetching branch.")
+
+
+
+
+
+
+
+
+
+
+
+
+async def get_manager_dashboard_data(user_id: int) -> ManagerDashboardInitialDataSchemaOut:
+    cache_key = f"manager_dashboard:{user_id}"
+
+    @cache_data(cache_key, ttl=300)
+    def fetch():
+        hotels_qs = Hotel.objects.filter(owner_id=user_id).prefetch_related("logo", "branches").order_by("id")
+        hotels = list(hotels_qs)
+
+        if not hotels:
+            return {"items": [], "count": 0}
+
+        items = []
+
+        for hotel in hotels:
+            # Serialize hotel
+            hotel_data = HotelSchemaOut.model_validate(hotel).model_dump()
+
+            # Serialize branches
+            branch_list = [BranchSchemaOut.model_validate(branch).model_dump() for branch in hotel.branches.all()]
+            hotel_data["branches"] = branch_list
+
+            items.append(hotel_data)
+
+        return {"items": items, "count": len(hotels)}
+
+    try:
+        result = await sync_to_async(fetch)()
+        # validate and return the final schema
+        return ManagerDashboardInitialDataSchemaOut.model_validate(result)
+
+    except Exception as e:
+        logger.error(f"Error fetching hotels for manager dashboard: {e}", exc_info=True)
+        raise HttpError(status_code=500, message="Something went wrong while fetching dashboard data.")
